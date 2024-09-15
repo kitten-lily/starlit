@@ -55,6 +55,24 @@ jobs:
             fi
             echo "VERSION=$ver" >> $GITHUB_ENV
 
+      - name: Verify base image
+        uses: EyeCantCU/cosign-action/verify@v0.3.0
+        with:
+          containers: cosmic:${{ env.fedora_version }}
+          registry: ghcr.io/ublue-os
+
+      - name: Verify Akmods
+        uses: EyeCantCU/cosign-action/verify@v0.3.0
+        with:
+          containers: akmods:fsync-${{ env.fedora_version }}
+          registry: ghcr.io/ublue-os
+
+      - name: Verify Kernel Cache
+        uses: EyeCantCU/cosign-action/verify@v0.3.0
+        with:
+          containers: fsync-kernel:${{ env.kernel_release }}
+          registry: ghcr.io/ublue-os
+
       - name: Maximize build space
         uses: ublue-os/remove-unwanted-software@v7
 
