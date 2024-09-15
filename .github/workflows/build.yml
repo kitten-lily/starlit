@@ -33,6 +33,28 @@ jobs:
       - name: Checkout Push to Registry action
         uses: actions/checkout@v4
 
+      - name: Get Current Fedora Version
+        id: labels
+        uses: Wandalen/wretry.action@6feedb7dedadeb826de0f45ff482b53b379a7844 # v3.5.0
+        with:
+          attempt_limit: 3
+          attempt_delay: 15000
+          command: |
+            set -eox pipefail
+            base_kernel_release=$(skopeo inspect docker://ghcr.io/ublue-os/cosmic:latest-amd64 | jq -r '.Labels["ostree.linux"]')
+            base_fedora_version=$(echo $base_kernel_release | grep -oP 'fc\K[0-9]+')
+            KERNEL_RELEASE=$(skopeo inspect docker://ghcr.io/ublue-os/fsync-kernel:${base_fedora_version} | jq -r '.Labels["ostree.linux"]')
+
+            fedora_version=$(echo $KERNEL_RELEASE | grep -oP 'fc\K[0-9]+')
+            echo "kernel_release=$KERNEL_RELEASE" >> $GITHUB_ENV
+            echo "fedora_version=$fedora_version" >> $GITHUB_ENV
+            ver=$(skopeo inspect docker://ghcr.io/ublue-os/cosmic:$fedora_version | jq -r '.Labels["org.opencontainers.image.version"]')
+            if [ -z "$ver" ] || [ "null" = "$ver" ]; then
+              echo "inspected image version must not be empty or null"
+              exit 1
+            fi
+            echo "VERSION=$ver" >> $GITHUB_ENV
+
       - name: Maximize build space
         uses: ublue-os/remove-unwanted-software@v7
 
