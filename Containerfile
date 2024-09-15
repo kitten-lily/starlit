@@ -62,19 +62,23 @@ COPY / /
 ## this is a standard Containerfile FROM using the build ARGs above to select the right upstream image
 FROM ghcr.io/ublue-os/${SOURCE_IMAGE}${SOURCE_SUFFIX}:${SOURCE_TAG}
 
-
 ### 3. MODIFICATIONS
 ## make modifications desired in your image and install packages by modifying the build.sh script
 ## the following RUN directive does all the things required to run "build.sh" as recommended.
 
-COPY build.sh /tmp/build.sh
+ARG IMAGE_NAME="${IMAGE_NAME}"
+ARG IMAGE_VENDOR="${IMAGE_VENDOR}"
+ARG AKMODS_FLAVOR="${AKMODS_FLAVOR}"
+ARG BASE_IMAGE_NAME="${BASE_IMAGE_NAME}"
+ARG FEDORA_MAJOR_VERSION="${FEDORA_MAJOR_VERSION}"
+ARG KERNEL="${KERNEL:-6.9.7-200.fc40.x86_64}"
 
 RUN --mount=type=cache,dst=/var/cache/rpm-ostree \
     --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=bind,from=akmods,source=/rpms,target=/tmp/akmods \
     --mount=type=bind,from=kernel_cache,source=/tmp/rpms,target=/tmp/kernel-rpms \
     mkdir -p /var/lib/alternatives && \
-    /tmp/build.sh && \
+    /ctx/build_files/build.sh && \
     ostree container commit
 
 ## NOTES:
