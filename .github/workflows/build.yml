@@ -129,6 +129,19 @@ jobs:
             org.opencontainers.image.description=${{ env.MY_IMAGE_DESC }}
             org.opencontainers.image.title=${{ env.MY_IMAGE_NAME }}
 
+      - name: Pull  images
+        if: github.event_name == 'pull_request' && ( matrix.image_flavor == 'main' || matrix.image_flavor == 'nvidia' ) || github.event_name != 'pull_request'
+        uses: Wandalen/wretry.action@6feedb7dedadeb826de0f45ff482b53b379a7844 # v3.5.0
+        with:
+          attempt_limit: 3
+          attempt_delay: 15000
+          command: |
+            # pull the base image used for FROM in containerfile so
+            # we can retry on that unfortunately common failure case
+            podman pull ghcr.io/ublue-os/cosmic:${{ env.fedora_version }}
+            podman pull ghcr.io/ublue-os/akmods:fsync-${{ env.fedora_version }}
+            podman pull ghcr.io/ublue-os/fsync-kernel:${{ env.kernel_release }}
+
       # Build image using Buildah action
       - name: Build Image
         id: build_image
