@@ -18,6 +18,9 @@ env:
   MY_IMAGE_DESC: "My Customized Universal Blue Image"
   IMAGE_REGISTRY: "ghcr.io/${{ github.repository_owner }}" # do not edit
 
+  BASE_IMAGE_NAME: "cosmic"
+  AKMODS_FLAVOR: "fsync"
+
 jobs:
   build_push:
     name: Build and push image
@@ -41,14 +44,14 @@ jobs:
           attempt_delay: 15000
           command: |
             set -eox pipefail
-            base_kernel_release=$(skopeo inspect docker://ghcr.io/ublue-os/cosmic:latest-amd64 | jq -r '.Labels["ostree.linux"]')
+            base_kernel_release=$(skopeo inspect docker://ghcr.io/ublue-os/${{ env.BASE_IMAGE_NAME }}:latest-amd64 | jq -r '.Labels["ostree.linux"]')
             base_fedora_version=$(echo $base_kernel_release | grep -oP 'fc\K[0-9]+')
-            KERNEL_RELEASE=$(skopeo inspect docker://ghcr.io/ublue-os/fsync-kernel:${base_fedora_version} | jq -r '.Labels["ostree.linux"]')
+            KERNEL_RELEASE=$(skopeo inspect docker://ghcr.io/ublue-os/${{ env.AKMODS_FLAVOR }}-kernel:${base_fedora_version} | jq -r '.Labels["ostree.linux"]')
 
             fedora_version=$(echo $KERNEL_RELEASE | grep -oP 'fc\K[0-9]+')
             echo "kernel_release=$KERNEL_RELEASE" >> $GITHUB_ENV
             echo "fedora_version=$fedora_version" >> $GITHUB_ENV
-            ver=$(skopeo inspect docker://ghcr.io/ublue-os/cosmic:$fedora_version | jq -r '.Labels["org.opencontainers.image.version"]')
+            ver=$(skopeo inspect docker://ghcr.io/ublue-os/${{ env.BASE_IMAGE_NAME }}:$fedora_version | jq -r '.Labels["org.opencontainers.image.version"]')
             if [ -z "$ver" ] || [ "null" = "$ver" ]; then
               echo "inspected image version must not be empty or null"
               exit 1
@@ -58,19 +61,19 @@ jobs:
       - name: Verify base image
         uses: EyeCantCU/cosign-action/verify@v0.3.0
         with:
-          containers: cosmic:${{ env.fedora_version }}
+          containers: ${{ env.BASE_IMAGE_NAME }}:${{ env.fedora_version }}
           registry: ghcr.io/ublue-os
 
       - name: Verify Akmods
         uses: EyeCantCU/cosign-action/verify@v0.3.0
         with:
-          containers: akmods:fsync-${{ env.fedora_version }}
+          containers: akmods:${{ env.AKMODS_FLAVOR }}-${{ env.fedora_version }}
           registry: ghcr.io/ublue-os
 
       - name: Verify Kernel Cache
         uses: EyeCantCU/cosign-action/verify@v0.3.0
         with:
-          containers: fsync-kernel:${{ env.kernel_release }}
+          containers: ${{ env.AKMODS_FLAVOR }}-kernel:${{ env.kernel_release }}
           registry: ghcr.io/ublue-os
 
       - name: Maximize build space
@@ -138,9 +141,9 @@ jobs:
           command: |
             # pull the base image used for FROM in containerfile so
             # we can retry on that unfortunately common failure case
-            podman pull ghcr.io/ublue-os/cosmic:${{ env.fedora_version }}
-            podman pull ghcr.io/ublue-os/akmods:fsync-${{ env.fedora_version }}
-            podman pull ghcr.io/ublue-os/fsync-kernel:${{ env.kernel_release }}
+            podman pull ghcr.io/ublue-os/${{ env.BASE_IMAGE_NAME }}:${{ env.fedora_version }}
+            podman pull ghcr.io/ublue-os/akmods:${{ env.AKMODS_FLAVOR }}-${{ env.fedora_version }}
+            podman pull ghcr.io/ublue-os/${{ env.AKMODS_FLAVOR }}-kernel:${{ env.kernel_release }}
 
       # Build image using Buildah action
       - name: Build Image
@@ -154,6 +157,13 @@ jobs:
           image: ${{ env.MY_IMAGE_NAME }}
           tags: |
             ${{ steps.generate-tags.outputs.alias_tags }}
+          build-args: |
+            BASE_IMAGE_NAME=${{ env.BASE_IMAGE_NAME }}
+            IMAGE_NAME=${{ env.MY_IMAGE_NAME }}
+            IMAGE_VENDOR=${{ github.repository_owner }}
+            FEDORA_MAJOR_VERSION=${{ env.fedora_version }}
+            AKMODS_FLAVOR=${{ env.AKMODS_FLAVOR }}
+            KERNEL=${{ env.kernel_release }}
           labels: ${{ steps.meta.outputs.labels }}
           oci: false
 
