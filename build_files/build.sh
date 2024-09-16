@@ -15,7 +15,6 @@ rsync -rvK /ctx/system_files/ /
 
 . /tmp/bluefin/build_files/cache_kernel.sh
 . /ctx/build_files/copr-repos.sh
-. /ctx/build_files/repos.sh
 . /tmp/bluefin/build_files/copr-repos-dx.sh
 . /tmp/bluefin/build_files/install-akmods.sh
 . /tmp/bluefin/build_files/install-akmods-dx.sh
