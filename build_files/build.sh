@@ -22,6 +22,7 @@ rsync -rvK /ctx/system_files/ /
 . /tmp/bluefin/build_files/image-info.sh
 . /tmp/bluefin/build_files/fetch-install.sh
 . /ctx/build_files/fetch-install.sh
+. /ctx/build_files/1password.sh
 . /tmp/bluefin/build_files/brew.sh
 . /ctx/build_files/font-install.sh
 . /tmp/bluefin/build_files/workarounds.sh
