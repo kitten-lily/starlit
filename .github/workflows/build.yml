@@ -163,6 +163,7 @@ jobs:
             IMAGE_VENDOR=${{ github.repository_owner }}
             FEDORA_MAJOR_VERSION=${{ env.fedora_version }}
             AKMODS_FLAVOR=${{ env.AKMODS_FLAVOR }}
+            NVIDIA_TYPE=main
             KERNEL=${{ env.kernel_release }}
           labels: ${{ steps.meta.outputs.labels }}
           oci: false
