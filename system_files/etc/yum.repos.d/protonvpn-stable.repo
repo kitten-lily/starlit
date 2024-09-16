@@ -4,4 +4,4 @@ baseurl = https://repo.protonvpn.com/fedora-\$releasever-stable
 enabled = 1
 gpgcheck = 1
 repo_gpgcheck=0
-gpgkey = https://repo.protonvpn.com/fedora-\$releasever-stable/public_key.asc
+gpgkey = https://repo.protonvpn.com/fedora-40-stable/public_key.asc
