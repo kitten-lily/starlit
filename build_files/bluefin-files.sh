@@ -24,8 +24,7 @@ mv /tmp/bluefin/system_files/shared/usr/share/wireplumber /tmp/system_files/usr/
 
 rm -rf /tmp/bluefin/system_files/dx/usr/lib/systemd/user
 mv /tmp/bluefin/system_files/dx/etc/yum.repos.d/docker-ce.repo /tmp/system_files/etc/yum.repos.d/
-mv /tmp/bluefin/system_files/dx/usr/lib/sysctl.d /tmp/system_files/usr/lib/
-mv /tmp/bluefin/system_files/dx/usr/libexec/* /tmp/system_files/usr/libexec/
 mv /tmp/bluefin/system_files/dx/usr/lib/sysctl.d/* /tmp/system_files/usr/lib/sysctl.d/
 mv /tmp/bluefin/system_files/dx/usr/lib/systemd/* /tmp/system_files/usr/lib/systemd/
 mv /tmp/bluefin/system_files/dx/usr/lib/tmpfiles.d/* /tmp/system_files/usr/lib/tmpfiles.d/
+mv /tmp/bluefin/system_files/dx/usr/libexec/* /tmp/system_files/usr/libexec/
