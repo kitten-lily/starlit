@@ -22,9 +22,8 @@ mv /tmp/bluefin/system_files/shared/usr/share/ublue-os/just /tmp/system_files/us
 mv /tmp/bluefin/system_files/shared/usr/share/ublue-os/ublue-os.jsonc /tmp/system_files/usr/share/ublue-os/
 mv /tmp/bluefin/system_files/shared/usr/share/wireplumber /tmp/system_files/usr/share/
 
-rm -rf /tmp/bluefin/system_files/dx/usr/lib/systemd/user
 mv /tmp/bluefin/system_files/dx/etc/yum.repos.d/docker-ce.repo /tmp/system_files/etc/yum.repos.d/
 mv /tmp/bluefin/system_files/dx/usr/lib/sysctl.d/* /tmp/system_files/usr/lib/sysctl.d/
-mv /tmp/bluefin/system_files/dx/usr/lib/systemd/* /tmp/system_files/usr/lib/systemd/
+mv /tmp/bluefin/system_files/dx/usr/lib/systemd/system/* /tmp/system_files/usr/lib/systemd/system/
 mv /tmp/bluefin/system_files/dx/usr/lib/tmpfiles.d/* /tmp/system_files/usr/lib/tmpfiles.d/
 mv /tmp/bluefin/system_files/dx/usr/libexec/* /tmp/system_files/usr/libexec/
