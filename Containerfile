@@ -57,6 +57,7 @@ FROM ${KERNEL_CACHE} AS kernel_cache
 
 FROM scratch AS ctx
 COPY / /
+RUN /build_files/bluefin/bluefin-files.sh
 
 ### 2. SOURCE IMAGE
 ## this is a standard Containerfile FROM using the build ARGs above to select the right upstream image
