@@ -17,6 +17,7 @@ rpm-ostree install \
 	mesa-libGLU \
 	nerd-fonts \
 	pulseaudio-utils \
+	python3-pip \
 	solaar \
 	stress-ng \
 	tailscale \
