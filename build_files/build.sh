@@ -5,6 +5,8 @@ set -ouex pipefail
 . /ctx/build_files/bluefin-files.sh
 . /ctx/build_files/secureblue-files.sh
 
+cp -r /ctx/just /tmp/just
+cp -r /tmp/bluefin/just/* /tmp/just/
 cp /ctx/packages.json /tmp/packages.json
 cp /tmp/system_files/etc/ublue-update/ublue-update.toml /tmp/ublue-update.toml
 
