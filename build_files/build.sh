@@ -3,7 +3,7 @@
 set -ouex pipefail
 
 . /ctx/build_files/bluefin-files.sh
-cp /ctx/system_files/etc/ublue-update/ublue-update.toml /tmp/ublue-update.toml
+cp /tmp/system_files/etc/ublue-update/ublue-update.toml /tmp/ublue-update.toml
 
 rsync -rvK /tmp/system_files/ /
 
