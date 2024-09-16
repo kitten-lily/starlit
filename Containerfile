@@ -74,6 +74,7 @@ ARG IMAGE_FLAVOR="${IMAGE_FLAVOR:-main}"
 ARG FEDORA_MAJOR_VERSION="${FEDORA_MAJOR_VERSION}"
 ARG NVIDIA_TYPE="${NVIDIA_TYPE:-}"
 ARG KERNEL="${KERNEL:-6.9.7-200.fc40.x86_64}"
+ARG UBLUE_IMAGE_TAG="${UBLUE_IMAGE_TAG:-latest}"
 
 RUN --mount=type=cache,dst=/var/cache/rpm-ostree \
     --mount=type=bind,from=ctx,source=/,target=/ctx \
